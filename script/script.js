@@ -1,15 +1,15 @@
-window.addEventListener('DOMContentLoaded', function () {
+window.addEventListener('DOMContentLoaded', () => {
     "use strict";
     //Timer
     function countTimer(deadline) {
-        let timerDays = document.querySelector('#timer-days'),
+        const timerDays = document.querySelector('#timer-days'),
             timerHours = document.querySelector('#timer-hours'),
             timerMinutes = document.querySelector('#timer-minutes'),
-            timerSeconds = document.querySelector('#timer-seconds'),
-            myInterval;
+            timerSeconds = document.querySelector('#timer-seconds');
+        let myInterval;
 
         function getTimeRemaining() {
-            let dateStop = new Date(deadline).getTime(),
+            const dateStop = new Date(deadline).getTime(),
                 dateNow = new Date().getTime(),
                 timeRemaining = (dateStop - dateNow) / 1000,
                 seconds = Math.floor(timeRemaining % 60),
@@ -25,7 +25,7 @@ window.addEventListener('DOMContentLoaded', function () {
             };
         }
 
-        const zeroBefore = x => x <= 9 ? 0 + x.toString() : x.toString();
+        const zeroBefore = x => (x <= 9 ? 0 + x.toString() : x.toString());
 
         const renderTimeRemaining = timer => {
             timerDays.textContent = zeroBefore(timer.days);
@@ -35,20 +35,20 @@ window.addEventListener('DOMContentLoaded', function () {
         };
 
         function updateClock() {
-            let timer = getTimeRemaining();
-            renderTimeRemaining(timer);
+            const timer = getTimeRemaining();
             if (timer.timeRemaining <= 0) {
                 timer.days = 0;
                 timer.hours = 0;
                 timer.minutes = 0;
                 timer.seconds = 0;
-                renderTimeRemaining(timer);
-                clearInterval(myInterval);
+                if (typeof myInterval !== undefined) {
+                    clearInterval(myInterval);
+                }
             }
+            renderTimeRemaining(timer);
         }
-
+        updateClock();
         myInterval = setInterval(updateClock, 1000);
     }
-
     countTimer('1 july 2021');
 });
