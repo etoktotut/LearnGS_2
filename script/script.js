@@ -84,13 +84,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const drawPopupDown = () => {
             const timePassed = Date.now() - startTime,
-                leftToEnd = 110 - Math.abs(top);
+                leftToEnd = 10 - top;
             //точно вписываемся на последнем шаге
             step = leftToEnd < step ? leftToEnd : step;
             top += step;
             elem.style.top = top + '%';
             //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
             if (timePassed >= time || top >= 10) {
+                elem.style.top = 10 + '%';
                 cancelAnimationFrame(animFrameId);
                 return;
             }
@@ -106,15 +107,14 @@ window.addEventListener('DOMContentLoaded', () => {
             popupContent = document.querySelector('.popup-content'),
             popupBtn = document.querySelectorAll('.popup-btn'),
             popUpClose = document.querySelector('.popup-close');
-
         popupBtn.forEach(elem => {
             elem.addEventListener('click', () => {
-                //если экран устройства уже 768px
+                popup.style.display = 'block';
+                //если экран устройства не уже 768px
                 if (screen.width <= 768) {
-                    popup.style.display = 'block';
+                    popupContent.style.display = 'block';
                 } else {
-                    popup.style.display = 'block';
-                    animate(popupContent, 1000);
+                    animate(popupContent, 300);
                 }
             });
         });
