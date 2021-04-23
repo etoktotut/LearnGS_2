@@ -78,9 +78,10 @@ window.addEventListener('DOMContentLoaded', () => {
     const animate = (elem, time) => {
         const startTime = Date.now(); // запомнить время начала
         elem.style.top = '-100%'; // двигаем меню за пределы экрана
-        elem.style.display = 'block';// показываем окно ( но оно еще не видно)
+        elem.style.display = 'block'; // показываем окно ( но оно еще не видно)
         let step = Math.floor((110 / time) * 20);
-        let top = -100, animFrameId;
+        let top = -100,
+            animFrameId;
 
         const drawPopupDown = () => {
             const timePassed = Date.now() - startTime,
