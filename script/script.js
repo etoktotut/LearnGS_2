@@ -75,36 +75,33 @@ window.addEventListener('DOMContentLoaded', () => {
 
     toggleMenu();
 
-    //popup
+    const animate = (popup, time) => {
+        const startTime = Date.now(); // запомнить время начала
+        popup.style.transform = 'translateY(-100%)'; // двигаем меню за пределы экрана
+        popup.style.display = 'block';// показываем окно ( но оно еще не видно)
+        let step = Math.floor((document.documentElement.clientHeight / time) * 20);
+        let top = 0, animFrameId;
 
-    const popupAnimationY = (popup, time) => {
-        const start = Date.now(); // запомнить время начала
-        popup.style.transform = 'translateY(-100%)';
-        popup.style.display = 'block';
-        // шаг смещения за одну 20ms
-        const step = Math.ceil((document.documentElement.clientHeight / time) * 20);
-        // положение по оси Y
-        let top = 0;
-
-        function draw(top) {
-            popup.style.top = top + 'px';
-        }
-
-
-        const timer = setInterval(() => {
-            // сколько времени прошло с начала анимации?
-            const timePassed = Date.now() - start;
+        const drawPopupDown = () => {
+            const timePassed = Date.now() - startTime,
+                docHeight = document.documentElement.clientHeight,
+                leftToEnd = docHeight - top;
+            //точно вписываемся на последнем шаге
+            step = leftToEnd < step ? leftToEnd : step;
             top += step;
-            draw(top);
+            popup.style.top = top + 'px';
             //если время вышло или окно целиком на странице - то прекращаем работать
-            if (timePassed >= time || top >= document.documentElement.clientHeight) {
-                clearInterval(timer);
+            if (timePassed >= time || top >= docHeight) {
+                cancelAnimationFrame(animFrameId);
                 return;
             }
 
-        }, 20); //20ms = 50fps
-
+            animFrameId = requestAnimationFrame(drawPopupDown);
+        };
+        drawPopupDown();
     };
+
+
 
     const togglePopUp = () => {
         const popup = document.querySelector('.popup'),
@@ -117,13 +114,11 @@ window.addEventListener('DOMContentLoaded', () => {
                 if (screen.width <= 768) {
                     popup.style.display = 'block';
                 } else {
-                    popupAnimationY(popup, 200);
+                    animate(popup, 300);
                 }
             });
         });
-
         popUpClose.addEventListener('click', () => popup.style.display = 'none');
-
     };
 
     togglePopUp();
