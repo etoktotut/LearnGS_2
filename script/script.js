@@ -77,48 +77,47 @@ window.addEventListener('DOMContentLoaded', () => {
 
     toggleMenu();
 
-    //popup
+    const animate = (elem, time) => {
+        const startTime = Date.now(); // запомнить время начала
+        elem.style.top = '-100%'; // двигаем меню за пределы экрана
+        elem.style.display = 'block'; // показываем окно ( но оно еще не видно)
+        let step = Math.floor((110 / time) * 20);
+        let top = -100,
+            animFrameId;
 
-    const popupAnimationY = (popup, time) => {
-        const start = Date.now(); // запомнить время начала
-        popup.style.transform = 'translateY(-100%)';
-        popup.style.display = 'block';
-        // шаг смещения за одну 20ms
-        const step = Math.ceil((document.documentElement.clientHeight / time) * 20);
-        // положение по оси Y
-        let top = 0;
-
-        function draw(top) {
-            popup.style.top = top + 'px';
-        }
-
-
-        const timer = setInterval(() => {
-            // сколько времени прошло с начала анимации?
-            const timePassed = Date.now() - start;
+        const drawPopupDown = () => {
+            const timePassed = Date.now() - startTime,
+                leftToEnd = 10 - top;
+            //точно вписываемся на последнем шаге
+            step = leftToEnd < step ? leftToEnd : step;
             top += step;
-            draw(top);
-            //если время вышло или окно целиком на странице - то прекращаем работать
-            if (timePassed >= time || top >= document.documentElement.clientHeight) {
-                clearInterval(timer);
+            elem.style.top = top + '%';
+            //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
+            if (timePassed >= time || top >= 10) {
+                elem.style.top = 10 + '%';
+                cancelAnimationFrame(animFrameId);
                 return;
             }
-
-        }, 20); //20ms = 50fps
-
+            animFrameId = requestAnimationFrame(drawPopupDown);
+        };
+        drawPopupDown();
     };
+
+
 
     const togglePopUp = () => {
         const popup = document.querySelector('.popup'),
+            popupContent = document.querySelector('.popup-content'),
             popupBtn = document.querySelectorAll('.popup-btn');
 
         popupBtn.forEach(elem => {
             elem.addEventListener('click', () => {
-                //если экран устройства уже 768px
+                popup.style.display = 'block';
+                //если экран устройства не уже 768px
                 if (screen.width <= 768) {
-                    popup.style.display = 'block';
+                    popupContent.style.display = 'block';
                 } else {
-                    popupAnimationY(popup, 200);
+                    animate(popupContent, 300);
                 }
             });
         });
@@ -141,6 +140,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 }
             }
         });
+
     };
 
     togglePopUp();
