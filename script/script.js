@@ -54,6 +54,30 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //меню
 
+    const smoothScroll = (targetYposition, timeOfScroll) => {
+        const startTime = Date.now();
+        let step = Math.floor((targetYposition / timeOfScroll) * 20);
+        let currentYposition = window.pageYOffset,
+            animFrameId;
+
+        const drawDown = () => {
+            const timePassed = Date.now() - startTime,
+                leftToEnd = Math.abs(targetYposition - currentYposition);
+            //точно вписываемся на последнем шаге
+            step = leftToEnd < step ? leftToEnd : step;
+            currentYposition += step;
+            window.scrollTo(0, currentYposition);
+            //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
+            if (timePassed >= timeOfScroll || currentYposition >= targetYposition) {
+                cancelAnimationFrame(animFrameId);
+                return;
+            }
+            animFrameId = requestAnimationFrame(drawDown);
+        };
+        drawDown();
+    };
+
+
     const toggleMenu = () => {
 
         const btnMenu = document.querySelector('.menu'),
@@ -63,11 +87,26 @@ window.addEventListener('DOMContentLoaded', () => {
             menu.classList.toggle('active-menu');
         };
 
+        const scrollMenu = event => {
+            handlerMenu();
+            event.preventDefault();
+            const blockID = event.target.closest('li').querySelector('a').getAttribute('href');
+            //event.preventDefault();
+            //const blockID = event.target.getAttribute('href');
+            //абсолютное положение блока от начала элемента : от текущего положения страницы  + величина прокрутки
+            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y + window.pageYOffset;
+            smoothScroll(blockY, 500);
+        };
+
         btnMenu.addEventListener('click', handlerMenu);
 
         menu.addEventListener('click', event => {
             const target = event.target;
-            if (target.classList.contains('close-btn') || target.closest('li')) {
+            const isLi = target.closest('li');
+            if (typeof isLi !== undefined) {
+                scrollMenu(event);
+            }
+            if (target.classList.contains('close-btn')) {
                 handlerMenu();
             }
         });
@@ -75,6 +114,19 @@ window.addEventListener('DOMContentLoaded', () => {
     };
 
     toggleMenu();
+
+    //кнопка внизу первой страницы страницы
+    const imgDownScroll = () => {
+        const imgDown = document.querySelector('img[src = "images/scroll.svg"]');
+        imgDown.addEventListener('click', () => {
+            const blckId = imgDown.parentNode.getAttribute('href');
+            const blckY = document.querySelector(`${blckId}`).getBoundingClientRect().y + window.pageYOffset;
+            smoothScroll(blckY, 500);
+        });
+    };
+
+    imgDownScroll();
+
 
     //popup
 
