@@ -67,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
         menu.addEventListener('click', event => {
             const target = event.target;
-            if (target.classList.contains('close-btn') || (target.tagName === 'A')) {
+            if (target.classList.contains('close-btn') || target.closest('li')) {
                 handlerMenu();
             }
         });
