@@ -80,13 +80,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-    const scrollMenu = event => {
-        event.preventDefault();
-        const blockID = event.target.getAttribute('href');
-        //абсолютное положение блока от начала элемента : от текущего положения страницы  + величина прокрутки
-        const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y + window.pageYOffset;
-        smoothScroll(blockY, 500);
-    };
+
 
     const toggleMenu = () => {
 
@@ -96,14 +90,26 @@ window.addEventListener('DOMContentLoaded', () => {
             menuItems = menu.querySelectorAll('ul>li'),
             menuItemsAnchor = menu.querySelectorAll('ul>li>a');
 
+
         const handlerMenu = () => {
             menu.classList.toggle('active-menu');
         };
 
+        const scrollMenu = event => {
+            handlerMenu();
+            event.preventDefault();
+            const blockID = event.target.closest('li').querySelector('a').getAttribute('href');
+            //event.preventDefault();
+            //const blockID = event.target.getAttribute('href');
+            //абсолютное положение блока от начала элемента : от текущего положения страницы  + величина прокрутки
+            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y + window.pageYOffset;
+            smoothScroll(blockY, 500);
+        };
+
         btnMenu.addEventListener('click', handlerMenu);
         closeBtn.addEventListener('click', handlerMenu);
-        menuItems.forEach(item => item.addEventListener('click', handlerMenu));
-        menuItemsAnchor.forEach(item => item.addEventListener('click', scrollMenu));
+        menuItems.forEach(item => item.addEventListener('click', scrollMenu));
+        //menuItemsAnchor.forEach(item => item.addEventListener('click', scrollMenu));
 
     };
 
