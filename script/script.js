@@ -103,7 +103,6 @@ window.addEventListener('DOMContentLoaded', () => {
         menu.addEventListener('click', event => {
             const target = event.target;
             const isLi = target.closest('li');
-            console.log('isLi: ', isLi);
 
             if (isLi) {
                 scrollMenu(event);
