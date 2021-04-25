@@ -108,7 +108,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 scrollMenu(event);
             }
             if (target.classList.contains('close-btn')) {
-                handlerMenu();
+                handlerMenu(event);
             }
         });
 
