@@ -102,9 +102,10 @@ window.addEventListener('DOMContentLoaded', () => {
         wbody.addEventListener('click', event => {
             const target = event.target;
             const isLi = target.closest('li');
+            const isMenu = isLi ? isLi.closest('menu') : false;
 
             if (menu.classList.contains('active-menu')) {
-                if (isLi) {
+                if (isLi && isMenu) {
                     scrollMenu(event);
                 } else if (!target.closest('menu') || target.classList.contains('close-btn')) {
                     handlerMenu(event);
