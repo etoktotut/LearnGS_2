@@ -53,45 +53,33 @@ window.addEventListener('DOMContentLoaded', () => {
     countTimer('1 july 2021');
 
     //меню
-    //прокрутка при езде по пунктам меню
+    //прокрутка при езде по пунктам меню и вверх и вниз
 
     const smoothScroll = (targetYposition, timeOfScroll) => {
         const startTime = Date.now();
         let animFrameId;
-        let step = Math.floor((targetYposition / timeOfScroll) * 16);
-        const moveUp = step < 0;
-        let leftToEnd = Math.abs(targetYposition); // остаток перемещения
-        let tYp = targetYposition + window.pageYOffset; // цель
-        let currentYposition = window.pageYOffset; //старт
-
-
-
+        let step = Math.floor((targetYposition / timeOfScroll) * 16); //16ms - 60fps
+        const moveUp = step < 0; //запоминаем направление движения, если шаг смещения отрицательный - двигаем страницу вверх
+        let leftToEnd = Math.abs(targetYposition); // остаток перемещения - постоянно корректируется
+        targetYposition += window.pageYOffset; // цель (точка прибытия) 
+        let currentYposition = window.pageYOffset; //стартовая точка
 
         const drawDown = () => {
             const timePassed = Date.now() - startTime;
-            //точно вписываемся на последнем шаге
+            //точно вписываемся на последнем шаге (последний шаг может быть как положительным, так и отрицательным)
             step = leftToEnd < Math.abs(step) ? step > 0 ? leftToEnd : -leftToEnd : step;
             currentYposition += step;
-            console.log(currentYposition, "", step, "", targetYposition, tYp, leftToEnd);
             window.scrollTo(0, currentYposition);
-            leftToEnd -= Math.abs(step);
+            leftToEnd -= Math.abs(step); // корректируем оставшееся расстояние после перемещения окна
             //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
-            //moveUp ? currentYposition <= tYp : currentYposition >= tYp
-
-            if (timePassed >= timeOfScroll || (moveUp ? currentYposition <= tYp : currentYposition >= tYp)) {
-
+            if (timePassed >= timeOfScroll || (moveUp ? currentYposition <= targetYposition : currentYposition >= targetYposition)) {
                 cancelAnimationFrame(animFrameId);
                 return;
             }
-
             animFrameId = requestAnimationFrame(drawDown);
         };
         drawDown();
     };
-
-
-
-
 
     const toggleMenu = () => {
 
@@ -109,23 +97,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         const scrollMenu = event => {
             handlerMenu(event);
-            //event.preventDefault();
             const blockID = event.target.closest('li').querySelector('a').getAttribute('href');
-            //event.preventDefault();
-            //const blockID = event.target.getAttribute('href');
-            //абсолютное положение блока от начала элемента : от текущего положения страницы  + величина прокрутки
-            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y;
-            //+ window.pageYOffset;
-            console.log(window.pageYOffset);
-            console.log(blockY);
-
+            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y; //положение блока от верха окна
             smoothScroll(blockY, 500);
         };
 
         btnMenu.addEventListener('click', handlerMenu);
         closeBtn.addEventListener('click', handlerMenu);
         menuItems.forEach(item => item.addEventListener('click', scrollMenu));
-        //menuItemsAnchor.forEach(item => item.addEventListener('click', scrollMenu));
 
     };
 
