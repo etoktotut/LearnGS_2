@@ -52,17 +52,17 @@ window.addEventListener('DOMContentLoaded', () => {
     }
     countTimer('1 july 2021');
 
-    //меню
+    //МЕНЮ
     //прокрутка при езде по пунктам меню и вверх и вниз
 
     const smoothScroll = (targetYposition, timeOfScroll) => {
         const startTime = Date.now();
         let animFrameId;
-        let step = Math.floor((targetYposition / timeOfScroll) * 16); //16ms - 60fps
-        const moveUp = step < 0; //запоминаем направление движения, если шаг смещения отрицательный - двигаем страницу вверх
+        let step = Math.floor((targetYposition / timeOfScroll) * 16); //расчет шага смещения (16ms - 60fps)
+        const moveUp = step < 0; //направление движения, если шаг смещения отрицательный - двигаем страницу Up
         let leftToEnd = Math.abs(targetYposition); // остаток перемещения - постоянно корректируется
-        targetYposition += window.pageYOffset; // цель (точка прибытия) 
         let currentYposition = window.pageYOffset; //стартовая точка
+        targetYposition += window.pageYOffset; //цель (точка прибытия)
 
         const drawDown = () => {
             const timePassed = Date.now() - startTime;
@@ -86,11 +86,9 @@ window.addEventListener('DOMContentLoaded', () => {
         const btnMenu = document.querySelector('.menu'),
             menu = document.querySelector('menu'),
             closeBtn = document.querySelector('.close-btn'),
-            menuItems = menu.querySelectorAll('ul>li'),
-            menuItemsAnchor = menu.querySelectorAll('ul>li>a');
+            menuItems = menu.querySelectorAll('ul>li');
 
-
-        const handlerMenu = (event) => {
+        const handlerMenu = event => {
             event.preventDefault();
             menu.classList.toggle('active-menu');
         };
@@ -115,7 +113,8 @@ window.addEventListener('DOMContentLoaded', () => {
         const imgDown = document.querySelector('img[src = "images/scroll.svg"]');
         imgDown.addEventListener('click', () => {
             const blckId = imgDown.parentNode.getAttribute('href');
-            const blckY = document.querySelector(`${blckId}`).getBoundingClientRect().y + window.pageYOffset;
+            const blckY = document.querySelector(`${blckId}`).getBoundingClientRect().y;
+            //+ window.pageYOffset;
             smoothScroll(blckY, 500);
         });
     };
