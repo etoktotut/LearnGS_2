@@ -57,22 +57,33 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const smoothScroll = (targetYposition, timeOfScroll) => {
         const startTime = Date.now();
-        let step = Math.floor((targetYposition / timeOfScroll) * 20);
-        let currentYposition = window.pageYOffset,
-            animFrameId;
+        let animFrameId;
+        let step = Math.floor((targetYposition / timeOfScroll) * 16);
+        const moveUp = step < 0;
+        let leftToEnd = Math.abs(targetYposition); // остаток перемещения
+        let tYp = targetYposition + window.pageYOffset; // цель
+        let currentYposition = window.pageYOffset; //старт
+
+
+
 
         const drawDown = () => {
-            const timePassed = Date.now() - startTime,
-                leftToEnd = Math.abs(targetYposition - currentYposition);
+            const timePassed = Date.now() - startTime;
             //точно вписываемся на последнем шаге
-            step = leftToEnd < step ? leftToEnd : step;
+            step = leftToEnd < Math.abs(step) ? step > 0 ? leftToEnd : -leftToEnd : step;
             currentYposition += step;
+            console.log(currentYposition, "", step, "", targetYposition, tYp, leftToEnd);
             window.scrollTo(0, currentYposition);
+            leftToEnd -= Math.abs(step);
             //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
-            if (timePassed >= timeOfScroll || currentYposition >= targetYposition) {
+            //moveUp ? currentYposition <= tYp : currentYposition >= tYp
+
+            if (timePassed >= timeOfScroll || (moveUp ? currentYposition <= tYp : currentYposition >= tYp)) {
+
                 cancelAnimationFrame(animFrameId);
                 return;
             }
+
             animFrameId = requestAnimationFrame(drawDown);
         };
         drawDown();
@@ -91,18 +102,23 @@ window.addEventListener('DOMContentLoaded', () => {
             menuItemsAnchor = menu.querySelectorAll('ul>li>a');
 
 
-        const handlerMenu = () => {
+        const handlerMenu = (event) => {
+            event.preventDefault();
             menu.classList.toggle('active-menu');
         };
 
         const scrollMenu = event => {
-            handlerMenu();
-            event.preventDefault();
+            handlerMenu(event);
+            //event.preventDefault();
             const blockID = event.target.closest('li').querySelector('a').getAttribute('href');
             //event.preventDefault();
             //const blockID = event.target.getAttribute('href');
             //абсолютное положение блока от начала элемента : от текущего положения страницы  + величина прокрутки
-            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y + window.pageYOffset;
+            const blockY = document.querySelector(`${blockID}`).getBoundingClientRect().y;
+            //+ window.pageYOffset;
+            console.log(window.pageYOffset);
+            console.log(blockY);
+
             smoothScroll(blockY, 500);
         };
 
