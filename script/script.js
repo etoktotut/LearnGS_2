@@ -58,7 +58,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const smoothScroll = (targetYposition, timeOfScroll) => {
         const startTime = Date.now();
         let animFrameId;
-        let step = Math.floor((targetYposition / timeOfScroll) * 16); //расчет шага смещения (16ms - 60fps)
+        let step = (targetYposition / timeOfScroll) * 16; //расчет шага смещения (16ms - 60fps)
         const moveUp = step < 0; //направление движения, если шаг смещения отрицательный - двигаем страницу Up
         let leftToEnd = Math.abs(targetYposition); // остаток перемещения - постоянно корректируется
         let currentYposition = window.pageYOffset; //стартовая точка
@@ -73,6 +73,7 @@ window.addEventListener('DOMContentLoaded', () => {
             leftToEnd -= Math.abs(step); // корректируем оставшееся расстояние после перемещения окна
             //если время вышло или окно в нужном месте на странице - то прекращаем анимацию
             if (timePassed >= timeOfScroll || (moveUp ? currentYposition <= targetYposition : currentYposition >= targetYposition)) {
+                window.scrollTo(0, targetYposition);
                 cancelAnimationFrame(animFrameId);
                 return;
             }
@@ -114,7 +115,6 @@ window.addEventListener('DOMContentLoaded', () => {
         imgDown.addEventListener('click', () => {
             const blckId = imgDown.parentNode.getAttribute('href');
             const blckY = document.querySelector(`${blckId}`).getBoundingClientRect().y;
-            //+ window.pageYOffset;
             smoothScroll(blckY, 500);
         });
     };
