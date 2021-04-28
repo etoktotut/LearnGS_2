@@ -236,11 +236,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     tabs();
 
-    // слфайдер 
+    //cлайдер
 
     const slider = () => {
         const slide = document.querySelectorAll('.portfolio-item'),
-            btn = document.querySelectorAll('.portfolio-btn'),
             slider = document.querySelector('.portfolio-content'),
             dotUl = document.querySelector('.portfolio-dots');
         let dot;
@@ -284,7 +283,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const dotInsert = () => {
 
             slide.forEach(item => {
-                let newDot = document.createElement('li');
+                const newDot = document.createElement('li');
                 newDot.classList.add('dot');
                 if (item.classList.contains('portfolio-item-active')) {
                     newDot.classList.add('dot-active');
@@ -299,9 +298,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
-        slider.addEventListener('click', (event) => {
+        slider.addEventListener('click', event => {
             event.preventDefault();
-            let target = event.target;
+            const target = event.target;
 
             if (!target.matches('.portfolio-btn, .dot')) {
                 return;
@@ -333,14 +332,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
         });
 
-        slider.addEventListener('mouseover', (event) => {
+        slider.addEventListener('mouseover', event => {
             if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
                 stopSlide();
             }
 
         });
 
-        slider.addEventListener('mouseout', (event) => {
+        slider.addEventListener('mouseout', event => {
             if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
                 startSlide(1500);
             }
@@ -361,7 +360,7 @@ window.addEventListener('DOMContentLoaded', () => {
         const imgCommandElems = document.querySelectorAll('.command .command__photo');
 
         const imgExchange = e => {
-            let temp = e.target.src;
+            const temp = e.target.src;
             e.target.src = e.target.dataset.img;
             e.target.dataset.img = temp;
         };
@@ -376,15 +375,19 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
     //только Кириллица + дефис и пробел
-    const withotEngSymbols = elem => elem.addEventListener('input', e => elem.value = elem.value.replace(/[^а-яёА-ЯЁ\-\ ]/gi, ''));
+    const withotEngSymbols = elem =>
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^а-яёА-ЯЁ\- ]/gi, ''));
 
     //только цифры
-    const approvedDigits = elem => elem.addEventListener('input', e => elem.value = elem.value.replace(/\D/g, ''));
-    //e-mail 
-    const approvedEmail = elem => elem.addEventListener('input', e => elem.value = elem.value.replace(/[^a-zA-Z@\-_!~\'\.\*]/gi, ''));
+    const approvedDigits = elem =>
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/\D/g, ''));
+    //e-mail
+    const approvedEmail = elem =>
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, ''));
 
     //phone
-    const approvedPhone = elem => elem.addEventListener('input', e => elem.value = elem.value.replace(/[^\d-\(\)]/g, ''));
+    const approvedPhone = elem =>
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^\d-()]/g, ''));
 
     const calcValidations = () => {
         const calcInputs = document.querySelectorAll('#calc input');
@@ -414,14 +417,15 @@ window.addEventListener('DOMContentLoaded', () => {
     };
     phoneValidations();
 
-    const valueValidation = elem => elem.addEventListener('blur', e => {
+    const valueValidation = elem => elem.addEventListener('blur', () => {
         elem.value = elem.value.replace(/^[ -]*/, '');
         elem.value = elem.value.replace(/[ -]*$/, '');
         elem.value = elem.value.replace(/ +/g, ' ');
         elem.value = elem.value.replace(/-+/g, '-');
 
         if (elem.name === 'user_name') {
-            elem.value = elem.value.replace(/[а-яА-Я]+/g, (match) => match.slice(0, 1).toUpperCase() + match.slice(1).toLowerCase());
+            elem.value = elem.value.replace(/[а-яА-Я]+/g,
+                match => match.slice(0, 1).toUpperCase() + match.slice(1).toLowerCase());
         }
 
     });
