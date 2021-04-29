@@ -383,8 +383,8 @@ window.addEventListener('DOMContentLoaded', () => {
         elem.addEventListener('input', () => elem.value = elem.value.replace(/\D/g, ''));
     //e-mail
     const approvedEmail = elem =>
-        elem.addEventListener('input', (e) => {
-            let temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, '');
+        elem.addEventListener('input', () => {
+            const temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, '');
             elem.value = 'a';
             elem.value = temp;
         });
@@ -433,7 +433,7 @@ window.addEventListener('DOMContentLoaded', () => {
         }
 
 
-        let temp = elem.value;
+        const temp = elem.value;
         elem.value = 'a';
         elem.value = temp;
 
