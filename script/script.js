@@ -383,7 +383,11 @@ window.addEventListener('DOMContentLoaded', () => {
         elem.addEventListener('input', () => elem.value = elem.value.replace(/\D/g, ''));
     //e-mail
     const approvedEmail = elem =>
-        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, ''));
+        elem.addEventListener('input', (e) => {
+            let temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, '');
+            elem.value = '';
+            elem.value = temp;
+        });
 
     //phone
     const approvedPhone = elem =>
@@ -427,6 +431,11 @@ window.addEventListener('DOMContentLoaded', () => {
             elem.value = elem.value.replace(/[а-яА-Я]+/g,
                 match => match.slice(0, 1).toUpperCase() + match.slice(1).toLowerCase());
         }
+
+
+        let temp = elem.value;
+        elem.value = '';
+        elem.value = temp;
 
     });
 
