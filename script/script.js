@@ -457,12 +457,37 @@ window.addEventListener('DOMContentLoaded', () => {
         const calcCount = document.querySelector('.calc-count');
         const totalValue = document.getElementById('total');
 
+
+        const animTotal = (start, stop) => {
+            const toUp = start < stop;
+            let step = Math.floor(Math.abs(stop - start) / 30); //60fps - то есть 1 секунда)
+            let idFrame;
+
+            const countUpDown = () => {
+                if ((toUp && start >= stop) || (!toUp && start <= stop)) {
+                    cancelAnimationFrame(idFrame);
+                    totalValue.textContent = stop;
+                    return;
+                }
+                if (Math.abs(stop - start) < step) { step = Math.abs(stop - start); } // Последний шажок
+                start = toUp ? start + step : start - step;
+                totalValue.textContent = start;
+                idFrame = requestAnimationFrame(countUpDown);
+            };
+
+            countUpDown();
+
+        }
+
         const countSum = () => {
             let total = 0,
                 countValue = 1,
                 dayValue = 1;
-            //const typeValue = calcType.value;
-            const typeValue = calcType.options[calcType.selectedIndex].value;
+
+            let startValue = +totalValue.textContent;
+
+            const typeValue = calcType.value;
+            //const typeValue = calcType.options[calcType.selectedIndex].value;
             const squareValue = +calcSquare.value;
 
             if (calcCount.value > 1) {
@@ -484,9 +509,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
 
+            animTotal(startValue, total);
 
-
-            totalValue.textContent = total;
+            // totalValue.textContent = total;
 
         };
 
