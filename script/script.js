@@ -385,7 +385,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const approvedEmail = elem =>
         elem.addEventListener('input', (e) => {
             let temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, '');
-            elem.value = '';
+            elem.value = 'a';
             elem.value = temp;
         });
 
@@ -434,7 +434,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
         let temp = elem.value;
-        elem.value = '';
+        elem.value = 'a';
         elem.value = temp;
 
     });
