@@ -405,21 +405,21 @@ window.addEventListener('DOMContentLoaded', () => {
         userNames.forEach(withotEngSymbols);
         withotEngSymbols(userMessage);
     };
-    textValidations();
+    // textValidations();
 
     const emailValidations = () => {
         const userEmails = document.querySelectorAll('input[name="user_email"]');
         userEmails.forEach(approvedEmail);
 
     };
-    emailValidations();
+    // emailValidations();
 
     const phoneValidations = () => {
         const userPhones = document.querySelectorAll('input[name="user_phone"]');
         userPhones.forEach(approvedPhone);
 
     };
-    phoneValidations();
+    //  phoneValidations();
 
     const valueValidation = elem => elem.addEventListener('blur', () => {
         elem.value = elem.value.replace(/^[ -]*/, '');
@@ -445,7 +445,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     };
 
-    blurValidation();
+    // blurValidation();
 
     //калькулятор
 
@@ -474,17 +474,15 @@ window.addEventListener('DOMContentLoaded', () => {
                 totalValue.textContent = start;
                 idFrame = requestAnimationFrame(countUpDown);
             };
-
             countUpDown();
-
-        }
+        };
 
         const countSum = () => {
             let total = 0,
                 countValue = 1,
                 dayValue = 1;
 
-            let startValue = +totalValue.textContent;
+            const startValue = +totalValue.textContent;
 
             const typeValue = calcType.value;
             //const typeValue = calcType.options[calcType.selectedIndex].value;
@@ -507,11 +505,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 total = 0;
             }
 
-
-
             animTotal(startValue, total);
-
-            // totalValue.textContent = total;
 
         };
 
