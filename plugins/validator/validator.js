@@ -19,7 +19,9 @@ class Validator {
         this.setPattern();
         this.elementsForm.forEach(elem => elem.addEventListener('change', this.checkIt.bind(this)));
         this.form.addEventListener('submit', e => {
-            this.elementsForm.forEach(elem => this.checkIt({ target: elem }));
+            this.elementsForm.forEach(elem => this.checkIt({
+                target: elem
+            }));
             if (this.error.size) {
                 e.preventDefault();
             }
@@ -114,9 +116,74 @@ class Validator {
         if (!this.pattern.email) {
             this.pattern.email = /^\w+@\w+\.\w{2,}$/;
         }
-
-
     }
-
-
 }
+
+//HTML part
+const validForm1 = new Validator({
+    selector: '#form1',
+    pattern: {
+        name: /^[а-яёА-ЯЁ]+ [а-яёА-ЯЁ]+$/,
+    },
+    method: {
+        'form1-name': [
+            ['notEmpty'],
+            ['pattern', 'name']
+        ],
+    }
+});
+validForm1.init();
+
+const validForm2 = new Validator({
+    selector: '#form2',
+    pattern: {
+        name: /^[а-яёА-ЯЁ]+ [а-яёА-ЯЁ]+$/,
+        message: /^[а-яёА-ЯЁ \-.]+$/
+    },
+    method: {
+        'form2-name': [
+            ['notEmpty'],
+            ['pattern', 'name']
+        ],
+        'form2-message': [
+            ['notEmpty'],
+            ['pattern', 'message']
+        ]
+    }
+});
+validForm2.init();
+
+const validForm3 = new Validator({
+    selector: '#form3',
+    pattern: {
+        name: /^[а-яёА-ЯЁ]+ [а-яёА-ЯЁ]+$/,
+    },
+    method: {
+        'form3-name': [
+            ['notEmpty'],
+            ['pattern', 'name']
+        ],
+    }
+});
+validForm3.init();
+
+
+// const valid = new Validator({
+// 	selector: '#form1',
+// 	pattern: {
+// 		phone: /^\+380\d{7}$/,
+// 		zip: /\d{5, 6}/,
+// 		name: /[а-яёА-ЯЁ]+/
+// 	},
+// 	method: {
+// 		'form1-name': [
+// 			['notEmpty'],
+// 			['pattern', 'phone']
+// 		],
+// 		'form1-email': [
+// 			['notEmpty'],
+// 			['pattern', 'email']
+
+// 		]
+// 	}
+// });
