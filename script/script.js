@@ -374,9 +374,14 @@ window.addEventListener('DOMContentLoaded', () => {
     //validations
 
 
-    //только Кириллица + дефис и пробел
+    //только Кириллица + пробел
     const withotEngSymbols = elem =>
-        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^а-яёА-ЯЁ\- ]/gi, ''));
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^а-яёА-ЯЁ ]/gi, ''));
+
+    //только кириллицу, пробелы, цифры и знаки препинания.
+    const validForMessage = elem =>
+        elem.addEventListener('input',
+            () => elem.value = elem.value.replace(/[^а-яёА-ЯЁ \d.,;:\-?!()"«»]/gi, ''));
 
     //только цифры
     const approvedDigits = elem =>
@@ -391,7 +396,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     //phone
     const approvedPhone = elem =>
-        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^\d-()]/g, ''));
+        elem.addEventListener('input', () => elem.value = elem.value.replace(/[^\d+]/g, ''));
 
     const calcValidations = () => {
         const calcInputs = document.querySelectorAll('#calc input');
@@ -403,23 +408,21 @@ window.addEventListener('DOMContentLoaded', () => {
         const userMessage = document.querySelector('input[name="user_message"]');
         const userNames = document.querySelectorAll('input[name="user_name"]');
         userNames.forEach(withotEngSymbols);
-        withotEngSymbols(userMessage);
+        validForMessage(userMessage);
     };
-    // textValidations();
+    textValidations();
 
     const emailValidations = () => {
         const userEmails = document.querySelectorAll('input[name="user_email"]');
         userEmails.forEach(approvedEmail);
-
     };
-    // emailValidations();
+    emailValidations();
 
     const phoneValidations = () => {
         const userPhones = document.querySelectorAll('input[name="user_phone"]');
         userPhones.forEach(approvedPhone);
-
     };
-    //  phoneValidations();
+    phoneValidations();
 
     const valueValidation = elem => elem.addEventListener('blur', () => {
         elem.value = elem.value.replace(/^[ -]*/, '');
@@ -431,21 +434,17 @@ window.addEventListener('DOMContentLoaded', () => {
             elem.value = elem.value.replace(/[а-яА-Я]+/g,
                 match => match.slice(0, 1).toUpperCase() + match.slice(1).toLowerCase());
         }
-
-
         const temp = elem.value;
         elem.value = 'a';
         elem.value = temp;
-
     });
 
     const blurValidation = () => {
         const allInputs = document.querySelectorAll('input');
         allInputs.forEach(valueValidation);
-
     };
 
-    // blurValidation();
+    blurValidation();
 
     //калькулятор
 
@@ -483,7 +482,6 @@ window.addEventListener('DOMContentLoaded', () => {
                 dayValue = 1;
 
             const startValue = +totalValue.textContent;
-
             const typeValue = calcType.value;
             //const typeValue = calcType.options[calcType.selectedIndex].value;
             const squareValue = +calcSquare.value;
@@ -500,13 +498,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
             if (typeValue && squareValue) {
                 total = Math.floor(price * typeValue * squareValue * countValue * dayValue);
-
             } else {
                 total = 0;
             }
-
             animTotal(startValue, total);
-
         };
 
         calcBlock.addEventListener('change', event => {
@@ -516,10 +511,68 @@ window.addEventListener('DOMContentLoaded', () => {
 
             }
         });
-
-
     };
 
-    calc();
+    calc(200);
+
+    //ajax send
+
+    const sendForm = form => {
+        const errorMessage = 'Что-то пошло не так...',
+            loadMessage = 'Загрузка...',
+            successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
+        // const form = document.getElementById('form1');
+        const statusMessage = document.createElement('div');
+        statusMessage.style.cssText = 'font-size: 2rem; color: white;';
+
+        const postData = (body, outputData, errorData) => {
+            const request = new XMLHttpRequest();
+            request.addEventListener('readystatechange', () => {
+                if (request.readyState !== 4) {
+                    return;
+                }
+                if (request.status === 200) {
+                    outputData();
+                } else {
+                    errorData(request.status);
+                }
+            });
+            request.open('POST', './server.php');
+            request.setRequestHeader('Content-Type', 'application/json');
+            request.send(JSON.stringify(body));
+        };
+
+        const clearInputs = form => {
+            form.querySelectorAll('input').forEach(item => item.value = '');
+        };
+
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            form.appendChild(statusMessage);
+            statusMessage.textContent = loadMessage;
+            const formData = new FormData(form);
+            const body = {};
+            // for (let val of formData.entries()) { body[val[0]] = val[1]; }
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
+
+            postData(body,
+                () => {
+                    statusMessage.textContent = successMessage;
+                    clearInputs(form);
+                },
+                error => {
+                    console.error(error);
+                    statusMessage.textContent = errorMessage;
+                    clearInputs(form);
+                });
+        });
+    };
+
+    sendForm(document.getElementById('form1'));
+    sendForm(document.getElementById('form2'));
+    sendForm(document.getElementById('form3'));
+
 
 });
