@@ -468,7 +468,9 @@ window.addEventListener('DOMContentLoaded', () => {
                     totalValue.textContent = stop;
                     return;
                 }
-                if (Math.abs(stop - start) < step) { step = Math.abs(stop - start); } // Последний шажок
+                if (Math.abs(stop - start) < step) {
+                    step = Math.abs(stop - start);
+                } // Последний шажок
                 start = toUp ? start + step : start - step;
                 totalValue.textContent = start;
                 idFrame = requestAnimationFrame(countUpDown);
@@ -522,11 +524,22 @@ window.addEventListener('DOMContentLoaded', () => {
             loadMessage = 'Загрузка...',
             successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
         // const form = document.getElementById('form1');
+
         const statusMessage = document.createElement('div');
         statusMessage.style.cssText = 'font-size: 2rem; color: white;';
+        const statusAnim = document.createElement('div');
+        statusAnim.innerHTML = `<div class="sk-wave sk-center">
+                                    <div class="sk-wave-rect"></div>
+                                    <div class="sk-wave-rect"></div>
+                                    <div class="sk-wave-rect"></div>
+                                    <div class="sk-wave-rect"></div>
+                                    <div class="sk-wave-rect"></div>
+                                </div>`;
+        statusAnim.setAttribute('style', '--sk-color: white;');
 
         const postData = (body, outputData, errorData) => {
             const request = new XMLHttpRequest();
+            statusMessage.textContent = '';
             request.addEventListener('readystatechange', () => {
                 if (request.readyState !== 4) {
                     return;
@@ -548,8 +561,9 @@ window.addEventListener('DOMContentLoaded', () => {
 
         form.addEventListener('submit', event => {
             event.preventDefault();
-            form.appendChild(statusMessage);
-            statusMessage.textContent = loadMessage;
+            //form.appendChild(statusMessage);
+            form.appendChild(statusAnim);
+            //statusMessage.textContent = loadMessage;
             const formData = new FormData(form);
             const body = {};
             // for (let val of formData.entries()) { body[val[0]] = val[1]; }
@@ -559,11 +573,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
             postData(body,
                 () => {
+                    statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = successMessage;
                     clearInputs(form);
                 },
                 error => {
                     console.error(error);
+                    statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = errorMessage;
                     clearInputs(form);
                 });
