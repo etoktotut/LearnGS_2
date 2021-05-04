@@ -521,7 +521,6 @@ window.addEventListener('DOMContentLoaded', () => {
 
     const sendForm = form => {
         const errorMessage = 'Что-то пошло не так...',
-            loadMessage = 'Загрузка...',
             successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
         // const form = document.getElementById('form1');
 
@@ -537,7 +536,7 @@ window.addEventListener('DOMContentLoaded', () => {
                                 </div>`;
         statusAnim.setAttribute('style', '--sk-color: white;');
 
-        const postData = (body, outputData, errorData) => {
+        const postData = body => new Promise((resolve, reject) => {
             const request = new XMLHttpRequest();
             statusMessage.textContent = '';
             request.addEventListener('readystatechange', () => {
@@ -545,15 +544,16 @@ window.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
                 if (request.status === 200) {
-                    outputData();
+                    resolve();
                 } else {
-                    errorData(request.status);
+                    reject(request.status);
                 }
             });
             request.open('POST', './server.php');
             request.setRequestHeader('Content-Type', 'application/json');
             request.send(JSON.stringify(body));
-        };
+        });
+
 
         const clearInputs = form => {
             form.querySelectorAll('input').forEach(item => item.value = '');
@@ -571,24 +571,26 @@ window.addEventListener('DOMContentLoaded', () => {
                 body[key] = val;
             });
 
-            postData(body,
-                () => {
+            postData(body)
+                .then(() => {
                     statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = successMessage;
-                    clearInputs(form);
-                },
-                error => {
+
+                })
+                .catch(error => {
                     console.error(error);
                     statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = errorMessage;
                     clearInputs(form);
-                });
+
+                })
+                .finally(() => { clearInputs(form); });
+
         });
     };
 
     sendForm(document.getElementById('form1'));
     sendForm(document.getElementById('form2'));
     sendForm(document.getElementById('form3'));
-
 
 });
