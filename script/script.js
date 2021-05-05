@@ -536,24 +536,14 @@ window.addEventListener('DOMContentLoaded', () => {
                                 </div>`;
         statusAnim.setAttribute('style', '--sk-color: white;');
 
-        const postData = body => new Promise((resolve, reject) => {
-            const request = new XMLHttpRequest();
-            statusMessage.textContent = '';
-            request.addEventListener('readystatechange', () => {
-                if (request.readyState !== 4) {
-                    return;
-                }
-                if (request.status === 200) {
-                    resolve();
-                } else {
-                    reject(request.status);
-                }
+        const postData = data =>
+            fetch('./server.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: data
             });
-            request.open('POST', './server.php');
-            request.setRequestHeader('Content-Type', 'application/json');
-            request.send(JSON.stringify(body));
-        });
-
 
         const clearInputs = form => {
             form.querySelectorAll('input').forEach(item => item.value = '');
@@ -561,31 +551,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
         form.addEventListener('submit', event => {
             event.preventDefault();
-            //form.appendChild(statusMessage);
             form.appendChild(statusAnim);
-            //statusMessage.textContent = loadMessage;
-            const formData = new FormData(form);
-            const body = {};
-            // for (let val of formData.entries()) { body[val[0]] = val[1]; }
-            formData.forEach((val, key) => {
-                body[key] = val;
-            });
 
-            postData(body)
-                .then(() => {
+            const formData = new FormData(form);
+
+            postData(formData)
+                .then(response => {
+                    if (response.status !== 200) {
+                        throw new Error('response status not 200');
+                    }
                     statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = successMessage;
-
                 })
                 .catch(error => {
                     console.error(error);
                     statusAnim.replaceWith(statusMessage);
                     statusMessage.textContent = errorMessage;
-                    clearInputs(form);
-
                 })
                 .finally(() => { clearInputs(form); });
-
         });
     };
 
