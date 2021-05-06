@@ -34,4 +34,4 @@ calc(200);
 //ajax send
 sendForm(document.getElementById('form1'));
 sendForm(document.getElementById('form2'));
-sendForm(document.getElementById('form3'));
+sendForm(document.getElementById('form3'), true);

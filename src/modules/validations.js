@@ -15,7 +15,7 @@ const validations = () => {
     //e-mail
     const approvedEmail = elem =>
         elem.addEventListener('input', () => {
-            const temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*]/gi, '');
+            const temp = elem.value.replace(/[^a-zA-Z@\-_!~'.*\d]/gi, '');
             elem.value = 'a';
             elem.value = temp;
         });

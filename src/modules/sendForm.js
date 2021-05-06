@@ -1,4 +1,5 @@
-const sendForm = form => {
+const sendForm = (form, popup) => {
+
     const errorMessage = 'Что-то пошло не так...',
         successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
     // const form = document.getElementById('form1');
@@ -45,6 +46,7 @@ const sendForm = form => {
                 }
                 statusAnim.replaceWith(statusMessage);
                 statusMessage.textContent = successMessage;
+
             })
             .catch(error => {
                 console.error(error);
@@ -52,7 +54,16 @@ const sendForm = form => {
                 statusMessage.textContent = errorMessage;
             })
             .finally(() => {
+                setTimeout(() => {
+                    statusMessage.textContent = '';
+                }, 3000);
                 clearInputs(form);
+
+                if (popup) {
+                    setTimeout(() => {
+                        form.closest('.popup').style.display = 'none';
+                    }, 3500);
+                }
             });
     });
 };
