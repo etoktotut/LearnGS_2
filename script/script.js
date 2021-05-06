@@ -540,7 +540,7 @@ window.addEventListener('DOMContentLoaded', () => {
             fetch('./server.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'multipart/form-data'
                 },
                 body: data
             });
