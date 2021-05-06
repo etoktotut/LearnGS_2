@@ -540,7 +540,7 @@ window.addEventListener('DOMContentLoaded', () => {
             fetch('./server.php', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'multipart/form-data'
+                    'Content-Type': 'application/ json'
                 },
                 body: data
             });
@@ -554,8 +554,13 @@ window.addEventListener('DOMContentLoaded', () => {
             form.appendChild(statusAnim);
 
             const formData = new FormData(form);
+            const body = {};
+            // for (let val of formData.entries()) { body[val[0]] = val[1]; }
+            formData.forEach((val, key) => {
+                body[key] = val;
+            });
 
-            postData(formData)
+            postData(JSON.stringify(body))
                 .then(response => {
                     if (response.status !== 200) {
                         throw new Error('response status not 200');
