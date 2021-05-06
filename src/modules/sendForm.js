@@ -1,4 +1,3 @@
-
 const sendForm = form => {
     const errorMessage = 'Что-то пошло не так...',
         successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
@@ -20,7 +19,7 @@ const sendForm = form => {
         fetch('./server.php', {
             method: 'POST',
             headers: {
-                'Content-Type': 'multipart/form-data'
+                'Content-Type': 'application/json'
             },
             body: data
         });
@@ -34,8 +33,12 @@ const sendForm = form => {
         form.appendChild(statusAnim);
 
         const formData = new FormData(form);
+        const body = {};
+        formData.forEach((val, key) => {
+            body[key] = val;
+        });
 
-        postData(formData)
+        postData(JSON.stringify(body))
             .then(response => {
                 if (response.status !== 200) {
                     throw new Error('response status not 200');
@@ -48,7 +51,9 @@ const sendForm = form => {
                 statusAnim.replaceWith(statusMessage);
                 statusMessage.textContent = errorMessage;
             })
-            .finally(() => { clearInputs(form); });
+            .finally(() => {
+                clearInputs(form);
+            });
     });
 };
 
