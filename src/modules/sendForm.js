@@ -29,11 +29,41 @@ const sendForm = (form, popup) => {
         form.querySelectorAll('input').forEach(item => item.value = '');
     };
 
+    const formDataValidation = formData => {
+        const userPhone = formData.querySelector('input[name = "user_phone"]');
+        const userName = formData.querySelector('input[name = "user_name"]');
+        const phoneLength = userPhone.value.replace(/\D/g, '').length;
+        if (userName.value.split(' ')[0].length < 2) {
+            userName.focus();
+            return 'В имени не может быть менее одного символа! ';
+        }
+        if (phoneLength < 11) {
+            userPhone.focus();
+            return 'Телефонный номер не может быть короче 11 цифр!';
+        }
+
+
+        return 'OK';
+
+    };
+
+
+
     form.addEventListener('submit', event => {
         event.preventDefault();
-        form.appendChild(statusAnim);
+        const canSend = formDataValidation(form);
+        if (canSend !== 'OK') {
+            statusMessage.textContent = canSend;
+            form.appendChild(statusMessage);
+            setTimeout(() => {
+                statusMessage.textContent = '';
+                form.removeChild(statusMessage);
+            }, 3000);
+            return;
+        }
 
         const formData = new FormData(form);
+        form.appendChild(statusAnim);
         const body = {};
         formData.forEach((val, key) => {
             body[key] = val;

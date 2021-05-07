@@ -6,7 +6,6 @@ module.exports = {
         path: path.resolve(__dirname, './dist')
     },
     mode: 'production',
-
     module: {
         rules: [
             {
@@ -19,8 +18,6 @@ module.exports = {
                 },
                 exclude: /node_modules/,
             }
-
         ]
-
     }
 };
