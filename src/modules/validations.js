@@ -4,8 +4,16 @@ const validations = () => {
     //e-mail required
     const emailRequired = () => {
         document.querySelectorAll('input[name="user_email"]').forEach(elem => elem.setAttribute('required', 'true'));
+        document.querySelectorAll('input[name="user_email"]').forEach(elem => elem.setAttribute('maxlength', "35"));
     };
     emailRequired();
+
+    //user_name length
+    const userNameMaxLength = () => {
+        document.querySelectorAll('input[name="user_name"]').forEach(elem => elem.setAttribute('maxlength', "35"));
+    };
+    userNameMaxLength();
+
 
 
     function maskPhone(selector, masked = '+7 (___) ___-__-__') {

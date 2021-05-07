@@ -2,7 +2,6 @@ const sendForm = (form, popup) => {
 
     const errorMessage = 'Что-то пошло не так...',
         successMessage = 'Спасибо! Мы скоро с вами свяжемся!';
-    // const form = document.getElementById('form1');
 
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = 'font-size: 2rem; color: white;';
@@ -30,7 +29,7 @@ const sendForm = (form, popup) => {
     };
 
     function validateEmail(email) {
-        const re = /^([a-zA-Z0-9\-_.]{1,30}@[a-zA-Z\-]{2,10}\.[a-zA-Z]{2,5})?$/;
+        const re = /^([a-zA-Z0-9\-_.]{1,30}@([a-zA-Z\-]{2,12}\.){1,2}[a-zA-Z]{2,5})?$/;
         return re.test(email);
     }
 
@@ -50,20 +49,14 @@ const sendForm = (form, popup) => {
 
         }
 
-
-
-
         if (phoneLength < 11) {
             userPhone.focus();
             return 'Телефонный номер не может быть короче 11 цифр!';
         }
 
-
         return 'OK';
 
     };
-
-
 
     form.addEventListener('submit', event => {
         event.preventDefault();
@@ -74,7 +67,7 @@ const sendForm = (form, popup) => {
             setTimeout(() => {
                 statusMessage.textContent = '';
                 form.removeChild(statusMessage);
-            }, 3000);
+            }, 2000);
             return;
         }
 
