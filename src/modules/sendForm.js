@@ -30,7 +30,7 @@ const sendForm = (form, popup) => {
     };
 
     function validateEmail(email) {
-        const re = /^([a-z0-9\-_.]{2,30}@[a-z]{2,10}\.[a-z]{2,5})?$/;
+        const re = /^([a-zA-Z0-9\-_.]{1,30}@[a-zA-Z\-]{2,10}\.[a-zA-Z]{2,5})?$/;
         return re.test(email);
     }
 
