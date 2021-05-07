@@ -29,14 +29,30 @@ const sendForm = (form, popup) => {
         form.querySelectorAll('input').forEach(item => item.value = '');
     };
 
+    function validateEmail(email) {
+        const re = /^([a-z0-9\-_.]{2,30}@[a-z]{2,10}\.[a-z]{2,5})?$/;
+        return re.test(email);
+    }
+
     const formDataValidation = formData => {
         const userPhone = formData.querySelector('input[name = "user_phone"]');
         const userName = formData.querySelector('input[name = "user_name"]');
+        const userEmail = formData.querySelector('input[name = "user_email"]');
         const phoneLength = userPhone.value.replace(/\D/g, '').length;
         if (userName.value.split(' ')[0].length < 2) {
             userName.focus();
             return 'В имени не может быть менее одного символа! ';
         }
+
+        if (!validateEmail(userEmail.value)) {
+            userName.focus();
+            return 'Неверный формат e-mail!';
+
+        }
+
+
+
+
         if (phoneLength < 11) {
             userPhone.focus();
             return 'Телефонный номер не может быть короче 11 цифр!';
