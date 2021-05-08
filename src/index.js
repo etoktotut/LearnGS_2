@@ -10,6 +10,7 @@ import ourCommand from './modules/ourCommand';
 import validations from './modules/validations';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
+import carousel from './modules/sliderCarousel';
 
 //Timer
 countTimer('1 july 2021');
@@ -35,3 +36,6 @@ calc(200);
 sendForm(document.getElementById('form1'));
 sendForm(document.getElementById('form2'));
 sendForm(document.getElementById('form3'), true);
+
+// carousel
+carousel();
